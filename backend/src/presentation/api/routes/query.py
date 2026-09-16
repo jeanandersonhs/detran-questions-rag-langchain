@@ -33,34 +33,18 @@ def create_query_router(query_use_case: QueryUseCase) -> APIRouter:
     async def post_query(request: QuestionRequest) -> AnswerResponse:
         """
         Handle POST requests to answer questions using the RAG pipeline.
-        
+
         Args:
-            request: QuestionRequest containing the query text
-            
+            request: QuestionRequest containing the query text (validated by Pydantic)
+
         Returns:
             AnswerResponse with the generated answer and source documents
-            
+
         Raises:
-            HTTPException: If there's an error in processing the query
+            HTTPException: 500 if there's an error in the RAG pipeline
         """
         try:
-            # Validate request
-            if not request.query or not request.query.strip():
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Query cannot be empty"
-                )
-            
-            # Execute the RAG pipeline
-            response = await query_use_case.execute(request)
-            return response
-        
-        except ValueError as ve:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=str(ve)
-            ) from ve
-        
+            return await query_use_case.execute(request)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

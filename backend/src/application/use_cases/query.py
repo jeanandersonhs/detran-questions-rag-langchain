@@ -60,12 +60,8 @@ class QueryUseCase:
         )
 
     async def execute(self, request: QuestionRequest) -> AnswerResponse:
-        query = request.query.strip()
-        if not query:
-            raise ValueError("Query cannot be empty")
-
         try:
-            result = await self.qa_chain.ainvoke({"query": query})
+            result = await self.qa_chain.ainvoke({"query": request.query})
             return AnswerResponse(
                 question=request.query,
                 answer=result["result"],

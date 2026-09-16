@@ -1,15 +1,23 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List
 
 
 class QuestionRequest(BaseModel):
     """Data Transfer Object for incoming question requests."""
-    query: str = Field(..., min_length=1, max_length=1000, description="The question to be answered")
-    
+    query: str = Field(..., max_length=1000, description="The question to be answered")
+
+    @field_validator("query")
+    @classmethod
+    def query_must_not_be_blank(cls, v: str) -> str:
+        stripped = v.strip()
+        if not stripped:
+            raise ValueError("Query cannot be empty or blank")
+        return stripped
+
     class Config:
         json_schema_extra = {
             "example": {
-                "query": "What is machine learning?"
+                "query": "O que é habilitação provisória?"
             }
         }
 
