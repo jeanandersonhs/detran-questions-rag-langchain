@@ -51,7 +51,6 @@ class GoogleAIClient:
 
     @classmethod
     def _get_api_key(cls) -> str:
-        """Read and validate the Google API key."""
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise RuntimeError("GOOGLE_API_KEY is not configured")
