@@ -65,6 +65,4 @@ out/
 # ===========================================
 # Docker
 # ===========================================
-.dockerignore
 docker-compose.override.yml
-*.dockerignore
